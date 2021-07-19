@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'login.dart';
 
 // Import the firebase_core plugin
 import 'package:firebase_core/firebase_core.dart';
@@ -28,50 +29,33 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      // Initialize FlutterFire:
-      future: _initialization,
-      builder: (context, snapshot) {
-        // Check for errors
-        if (snapshot.hasError) {
-          return SomethingWentWrong();
-        }
+    return MaterialApp(
+      theme: ThemeData(primarySwatch: Colors.red),
+      home: FutureBuilder(
+        // Initialize FlutterFire:
+        future: _initialization,
+        builder: (context, snapshot) {
+          // Check for errors
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text(
+                "There has occured an error with the firebase server connection",
+                style: TextStyle(color: Colors.white),
+              ),
+            );
+          }
 
-        // Once complete, show your application
-        if (snapshot.connectionState == ConnectionState.done) {
-          return MyAwesomeApp();
-        }
+          // Once complete, show your application
+          if (snapshot.connectionState == ConnectionState.done) {
+            return LoginSwitch();
+          }
 
-        // Otherwise, show something whilst waiting for initialization to complete
-        return Loading();
-      },
+          // Otherwise, show something whilst waiting for initialization to complete
+          return const Center(
+            child: FlutterLogo(),
+          );
+        },
+      ),
     );
-  }
-}
-
-class SomethingWentWrong extends StatelessWidget {
-  const SomethingWentWrong({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
-
-class MyAwesomeApp extends StatelessWidget {
-  const MyAwesomeApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
-
-class Loading extends StatelessWidget {
-  const Loading({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }
