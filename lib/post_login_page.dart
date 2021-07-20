@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'character_sheet/character_sheet.dart';
+import 'character_sheet/character_sheet_page.dart';
 
 class PostLoginPage extends StatefulWidget {
   PostLoginPage({Key? key}) : super(key: key);
@@ -91,7 +91,7 @@ class CaractersPage extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => CharacterSheet(
+                              builder: (context) => CharacterSheetPage(
                                     characterId: snapshot.data!.docs[index].id,
                                   )));
                     },

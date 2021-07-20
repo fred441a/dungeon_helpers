@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'roller_page.dart';
+import 'character_sheet_functions.dart';
 
-class CharacterSheet extends StatelessWidget {
-  const CharacterSheet({Key? key, required this.characterId}) : super(key: key);
+class CharacterSheetPage extends StatelessWidget {
+  const CharacterSheetPage({Key? key, required this.characterId})
+      : super(key: key);
   final String characterId;
 
   @override
@@ -18,11 +20,11 @@ class CharacterSheet extends StatelessWidget {
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasError) {
-            return Text('Something went wrong');
+            return const Text('Something went wrong');
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text("Loading");
+            return const Text("Loading");
           }
 
           Map<String, dynamic> data =
@@ -31,7 +33,13 @@ class CharacterSheet extends StatelessWidget {
             length: 6,
             child: Scaffold(
               appBar: AppBar(
-                title: Text(data["name"]),
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("${data["name"]} - ${level(data["xp"])}"),
+                    Text("${data["race"]}, ${data["class"]}")
+                  ],
+                ),
                 bottom: const TabBar(tabs: [
                   Tab(
                     icon: Icon(Icons.casino),
@@ -53,7 +61,9 @@ class CharacterSheet extends StatelessWidget {
               ),
               body: TabBarView(
                 children: [
-                  RollerPage(),
+                  RollerPage(
+                    data: data,
+                  ),
                   Container(),
                   Container(),
                   Container(),
