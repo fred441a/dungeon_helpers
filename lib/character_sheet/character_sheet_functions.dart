@@ -200,3 +200,45 @@ class Abilitymodifiers extends StatelessWidget {
     );
   }
 }
+
+class Dinglebob extends StatelessWidget {
+  const Dinglebob({Key? key, required this.label, required this.value})
+      : super(key: key);
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        width: percentWidth(0.25, context),
+        height: percentHeight(0.15, context),
+        child: Center(
+          child: Column(
+            children: [
+              ClipOval(
+                  child: Container(
+                width: percentHeight(0.06, context),
+                height: percentHeight(0.06, context),
+                color: Colors.redAccent, //Color.fromRGBO(225, 225, 225, 1),
+                child: Center(
+                  child: Text(
+                    value,
+                    style: const TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+              )),
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 18,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ));
+  }
+}

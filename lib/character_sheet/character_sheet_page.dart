@@ -1,3 +1,4 @@
+import 'package:dungeonhelper/character_sheet/skills_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'roller_page.dart';
@@ -64,7 +65,7 @@ class CharacterSheetPage extends StatelessWidget {
                   RollerPage(
                     data: data,
                   ),
-                  Container(),
+                  SkillsPage(data: data),
                   Container(),
                   Container(),
                   Container(),
