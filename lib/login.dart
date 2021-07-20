@@ -3,10 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'post_login_page.dart';
 
 //TODO
 //fix facebook login
 //fix email does not exist pop up error
+//login page blinks on app bootup
 
 Future<UserCredential> signInWithFacebook() async {
   // Trigger the sign-in flow
@@ -49,7 +51,7 @@ class LoginSwitch extends StatelessWidget {
         if (snapshot.data == null) {
           return LoginPage();
         }
-        return Container();
+        return PostLoginPage();
       },
       stream: FirebaseAuth.instance.authStateChanges(),
     );

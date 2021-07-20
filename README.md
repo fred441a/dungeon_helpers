@@ -1,16 +1,11 @@
 # dungeonhelper
 
-A new Flutter project.
+Dungeon Helper is an app that hopes to help you on your epic Dnd journey wether that be as a dm or as a player, you will still get to enjoy awesome NFC mini features.
 
-## Getting Started
+## TODOS
 
-This project is a starting point for a Flutter application.
+### Login
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- fix facebook login
+- fix email does not exist pop up error
+- login page blinks on app bootup

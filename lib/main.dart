@@ -47,7 +47,7 @@ class _AppState extends State<App> {
 
           // Once complete, show your application
           if (snapshot.connectionState == ConnectionState.done) {
-            return LoginSwitch();
+            return const LoginSwitch();
           }
 
           // Otherwise, show something whilst waiting for initialization to complete
