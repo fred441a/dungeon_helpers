@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'character_sheet_functions.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SkillsPage extends StatelessWidget {
-  SkillsPage({Key? key, required this.data}) : super(key: key);
+  SkillsPage({Key? key, required this.data, required this.character})
+      : super(key: key);
 
   Map<String, dynamic> data;
+  DocumentReference<Map<String, dynamic>> character;
 
   @override
   Widget build(BuildContext context) {
@@ -17,16 +20,19 @@ class SkillsPage extends StatelessWidget {
             children: [
               Dinglebob(
                 label: "Hitpoints",
-                value: data["hitpoints"].toString(),
+                value: data["current hit points"].toString(),
               ),
+              Spacer(),
               Dinglebob(
                 label: "Armor Class",
                 value: data["armor class"].toString(),
               ),
+              Spacer(),
               Dinglebob(
                 label: "Proficiency bonus",
                 value: modifier(proficiencyBonus(data["xp"])),
               ),
+              Spacer(),
               Dinglebob(
                 label: "Speed",
                 value: data["speed"].toString() + "ft",
@@ -38,6 +44,7 @@ class SkillsPage extends StatelessWidget {
           width: percentWidth(.9, context),
           child: TextField(
             controller: _skills,
+            focusNode: textUpdator(_skills, "ptal", character),
             maxLines: null,
             keyboardType: TextInputType.multiline,
             minLines: 20,

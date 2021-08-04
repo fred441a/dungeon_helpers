@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'character_sheet/character_sheet_page.dart';
+import 'group_sheet/group_sheet.dart';
 
 class PostLoginPage extends StatefulWidget {
   PostLoginPage({Key? key}) : super(key: key);
@@ -62,6 +63,8 @@ class _PostLoginPageState extends State<PostLoginPage>
   }
 }
 
+//TODO make this 1 class that can function as just charachter and group class
+
 class CaractersPage extends StatelessWidget {
   const CaractersPage({Key? key}) : super(key: key);
 
@@ -108,6 +111,37 @@ class Groups extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    Stream<QuerySnapshot> _groups = FirebaseFirestore.instance
+        .collection("Groups")
+        .where("userId", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .snapshots();
+    return StreamBuilder(
+        stream: _groups,
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Text('Something went wrong');
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Text("Loading");
+          }
+          return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Padding(
+                  padding: EdgeInsets.all(4),
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Groupsheet(
+                                  groupId: snapshot.data!.docs[index].id)));
+                    },
+                    child: Text(snapshot.data!.docs[index]["name"]),
+                  ),
+                );
+              });
+        });
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 int level(int xp) {
   if (xp < 300) {
@@ -211,7 +212,7 @@ class Dinglebob extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: percentWidth(0.25, context),
+        width: percentWidth(0.20, context),
         height: percentHeight(0.15, context),
         child: Center(
           child: Column(
@@ -241,4 +242,13 @@ class Dinglebob extends StatelessWidget {
           ),
         ));
   }
+}
+
+FocusNode textUpdator(TextEditingController _controller, String _dataname,
+    DocumentReference<Map<String, dynamic>> _character) {
+  FocusNode _focus = FocusNode();
+  _focus.addListener(() {
+    _character.update({_dataname: _controller.text});
+  });
+  return _focus;
 }

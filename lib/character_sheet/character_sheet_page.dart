@@ -1,4 +1,8 @@
+import 'package:dungeonhelper/character_sheet/items_page.dart';
+import 'package:dungeonhelper/character_sheet/notes_page.dart';
 import 'package:dungeonhelper/character_sheet/skills_page.dart';
+import 'package:dungeonhelper/character_sheet/spell_page.dart';
+import 'package:dungeonhelper/character_sheet/weapons_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'roller_page.dart';
@@ -11,13 +15,12 @@ class CharacterSheetPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Stream<DocumentSnapshot> _character = FirebaseFirestore.instance
-        .collection("Characters")
-        .doc(characterId)
-        .snapshots();
+    DocumentReference<Map<String, dynamic>> _character =
+        FirebaseFirestore.instance.collection("Characters").doc(characterId);
+    Stream<DocumentSnapshot> _stream = _character.snapshots();
 
     return StreamBuilder(
-        stream: _character,
+        stream: _stream,
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasError) {
@@ -33,6 +36,7 @@ class CharacterSheetPage extends StatelessWidget {
           return DefaultTabController(
             length: 6,
             child: Scaffold(
+              resizeToAvoidBottomInset: true,
               appBar: AppBar(
                 title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,14 +66,27 @@ class CharacterSheetPage extends StatelessWidget {
               ),
               body: TabBarView(
                 children: [
-                  RollerPage(
+                  RollerPage(data: data),
+                  SkillsPage(
                     data: data,
+                    character: _character,
                   ),
-                  SkillsPage(data: data),
-                  Container(),
-                  Container(),
-                  Container(),
-                  Container(),
+                  WeaponsPage(
+                    data: data,
+                    character: _character,
+                  ),
+                  ItemPage(
+                    data: data,
+                    character: _character,
+                  ),
+                  SpellPage(
+                    data: data,
+                    character: _character,
+                  ),
+                  NotesPage(
+                    data: data,
+                    character: _character,
+                  ),
                 ],
               ),
             ),
