@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'players_page.dart';
+import 'monster_page.dart';
 
 class Groupsheet extends StatelessWidget {
   Groupsheet({Key? key, required this.groupId}) : super(key: key);
@@ -31,7 +32,7 @@ class Groupsheet extends StatelessWidget {
           return DefaultTabController(
             length: 6,
             child: Scaffold(
-              resizeToAvoidBottomInset: true,
+              resizeToAvoidBottomInset: false,
               appBar: AppBar(
                 title: Text(data["name"]),
                 bottom: const TabBar(tabs: [
@@ -56,7 +57,7 @@ class Groupsheet extends StatelessWidget {
               body: TabBarView(
                 children: [
                   PlayerPage(data: data),
-                  Container(),
+                  MonsterPage(data: data),
                   Container(),
                   Container(),
                   Container(),
