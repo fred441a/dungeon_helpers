@@ -6,7 +6,7 @@ import 'package:dungeonhelper/character_sheet/weapons_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'roller_page.dart';
-import 'character_sheet_functions.dart';
+import '../general_functions.dart';
 
 class CharacterSheetPage extends StatelessWidget {
   const CharacterSheetPage({Key? key, required this.characterId})

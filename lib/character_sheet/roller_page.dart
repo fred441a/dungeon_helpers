@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'character_sheet_functions.dart';
+import '../general_functions.dart';
 
 class RollerPage extends StatelessWidget {
   RollerPage({Key? key, required this.data}) : super(key: key);

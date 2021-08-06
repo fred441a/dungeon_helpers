@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'character_sheet_functions.dart';
+import '../general_functions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SkillsPage extends StatelessWidget {

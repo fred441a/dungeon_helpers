@@ -57,7 +57,10 @@ class Groupsheet extends StatelessWidget {
               body: TabBarView(
                 children: [
                   PlayerPage(data: data),
-                  MonsterPage(data: data),
+                  MonsterPage(
+                    data: data,
+                    group: _groups,
+                  ),
                   Container(),
                   Container(),
                   Container(),

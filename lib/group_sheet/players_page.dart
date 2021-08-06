@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../character_sheet/character_sheet_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../character_sheet/character_sheet_functions.dart';
+import '../general_functions.dart';
 
 //TODO fix player rules so that players with different owners can be seen by dm
 

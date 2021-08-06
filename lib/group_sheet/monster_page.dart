@@ -1,13 +1,20 @@
 import 'dart:convert';
 
-import 'package:dungeonhelper/character_sheet/character_sheet_functions.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dungeonhelper/general_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dart:developer';
+
+// TODO add a way to delet monsters
+// make monsters editable
 
 class MonsterPage extends StatelessWidget {
-  MonsterPage({Key? key, required this.data}) : super(key: key);
+  MonsterPage({Key? key, required this.data, required this.group})
+      : super(key: key);
 
   Map<String, dynamic> data;
+  DocumentReference<Map<String, dynamic>> group;
 
   @override
   Widget build(BuildContext context) {
@@ -16,13 +23,45 @@ class MonsterPage extends StatelessWidget {
         ElevatedButton(
             onPressed: () => showDialog(
                 context: context,
-                builder: (BuildContext context) => Monstersearch()),
+                builder: (BuildContext context) => Monstersearch(
+                      group: group,
+                      data: data,
+                    )),
             child: const Text("Add monster +")),
         Expanded(
             child: ListView.builder(
                 itemCount: data["monsters"].length,
                 itemBuilder: (BuildContext context, int index) {
-                  return Container();
+                  return Row(
+                    children: [
+                      Container(
+                        width: percentWidth(.8, context),
+                        child: OutlinedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          MiniSheet(
+                                            data: data["monsters"][index],
+                                          )));
+                            },
+                            child: Text(data["monsters"][index]["name"])),
+                      ),
+                      Container(
+                        width: percentWidth(.2, context),
+                        child: ElevatedButton(
+                          child: Icon(Icons.delete),
+                          onPressed: () {
+                            List tempArray = data["monsters"];
+                            tempArray.removeAt(index);
+                            group.set({"monsters": tempArray},
+                                SetOptions(merge: true));
+                          },
+                        ),
+                      )
+                    ],
+                  );
                 }))
       ],
     );
@@ -30,21 +69,20 @@ class MonsterPage extends StatelessWidget {
 }
 
 class Monstersearch extends StatelessWidget {
-  const Monstersearch({Key? key}) : super(key: key);
+  Monstersearch({Key? key, required this.group, required this.data})
+      : super(key: key);
+  DocumentReference<Map<String, dynamic>> group;
+  Map<String, dynamic> data;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text("Find the monster you are looking for"),
-      content: MonsterSearchContent(),
+      content: MonsterSearchContent(group: group, data: data),
       actions: <Widget>[
         TextButton(
           onPressed: () => Navigator.pop(context, 'Cancel'),
           child: const Text('Cancel'),
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(context, 'OK'),
-          child: const Text('Add'),
         ),
       ],
     );
@@ -52,7 +90,10 @@ class Monstersearch extends StatelessWidget {
 }
 
 class MonsterSearchContent extends StatefulWidget {
-  const MonsterSearchContent({Key? key}) : super(key: key);
+  MonsterSearchContent({Key? key, required this.group, required this.data})
+      : super(key: key);
+  DocumentReference<Map<String, dynamic>> group;
+  Map<String, dynamic> data;
 
   @override
   _MonsterSearchContentState createState() => _MonsterSearchContentState();
@@ -71,9 +112,14 @@ class _MonsterSearchContentState extends State<MonsterSearchContent> {
     }
   }
 
+  String nestedArrayRemover(String jsoninput) {
+    jsoninput = jsoninput.replaceAll("[[", "[");
+    jsoninput = jsoninput.replaceAll("]]", "]");
+    return jsoninput;
+  }
+
   @override
   Widget build(BuildContext context) {
-    updateSearch("");
     return Column(children: [
       TextField(
         onChanged: updateSearch,
@@ -85,7 +131,16 @@ class _MonsterSearchContentState extends State<MonsterSearchContent> {
           itemCount: _monsterJson["count"],
           itemBuilder: (BuildContext context, int index) {
             return OutlinedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  var respons = await http.get(Uri.parse(
+                      "http://www.dnd5eapi.co" +
+                          _monsterJson["results"][index]["url"]));
+                  var temparray = widget.data["monsters"];
+                  temparray.add(jsonDecode(nestedArrayRemover(respons.body)));
+                  widget.group
+                      .set({"monsters": temparray}, SetOptions(merge: true));
+                  Navigator.pop(context);
+                },
                 child: Text(_monsterJson["results"][index]["name"]));
           },
         ),
