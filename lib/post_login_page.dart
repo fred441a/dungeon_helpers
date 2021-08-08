@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'character_sheet/character_sheet_page.dart';
 import 'group_sheet/group_sheet.dart';
+import 'create_character_page.dart';
 
 class PostLoginPage extends StatefulWidget {
   PostLoginPage({Key? key}) : super(key: key);
@@ -31,7 +32,10 @@ class _PostLoginPageState extends State<PostLoginPage>
 
   void floatingActionButtonPress() {
     if (_tabController.index == 0) {
-      print("First page");
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => CharacterCreationPage()));
     } else if (_tabController.index == 1) {
       print("Second page");
     }
