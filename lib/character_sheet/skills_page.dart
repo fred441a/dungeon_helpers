@@ -20,7 +20,7 @@ class SkillsPage extends StatelessWidget {
             children: [
               Dinglebob(
                 label: "Hitpoints",
-                value: data["current hit points"].toString(),
+                value: data["hitpoints"].toString(),
               ),
               Spacer(),
               Dinglebob(
