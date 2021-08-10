@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import '../general_functions.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RollerPage extends StatelessWidget {
-  RollerPage({Key? key, required this.data}) : super(key: key);
+  RollerPage({Key? key, required this.data, required this.character})
+      : super(key: key);
 
   Map<String, dynamic> data;
+  DocumentReference<Map<String, dynamic>> character;
 
   @override
   Widget build(BuildContext context) {
@@ -17,26 +20,50 @@ class RollerPage extends StatelessWidget {
                 Abilitymodifiers(
                   label: "Strength",
                   value: data["strength"],
+                  update: (value) {
+                    character.set({"strength": int.parse(value)},
+                        SetOptions(merge: true));
+                  },
                 ),
                 Abilitymodifiers(
                   label: "Dexterity",
                   value: data["dexterity"],
+                  update: (value) {
+                    character.set({"dexterity": int.parse(value)},
+                        SetOptions(merge: true));
+                  },
                 ),
                 Abilitymodifiers(
                   label: "Constitution",
                   value: data["constitution"],
+                  update: (value) {
+                    character.set({"constitution": int.parse(value)},
+                        SetOptions(merge: true));
+                  },
                 ),
                 Abilitymodifiers(
                   label: "Inteligence",
                   value: data["inteligence"],
+                  update: (value) {
+                    character.set({"inteligence": int.parse(value)},
+                        SetOptions(merge: true));
+                  },
                 ),
                 Abilitymodifiers(
                   label: "Wisdom",
                   value: data["wisdom"],
+                  update: (value) {
+                    character.set(
+                        {"wisdom": int.parse(value)}, SetOptions(merge: true));
+                  },
                 ),
                 Abilitymodifiers(
                   label: "Charisma",
                   value: data["charisma"],
+                  update: (value) {
+                    character.set({"charisma": int.parse(value)},
+                        SetOptions(merge: true));
+                  },
                 ),
               ],
             )),

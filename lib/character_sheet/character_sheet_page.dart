@@ -66,7 +66,10 @@ class CharacterSheetPage extends StatelessWidget {
               ),
               body: TabBarView(
                 children: [
-                  RollerPage(data: data),
+                  RollerPage(
+                    data: data,
+                    character: _character,
+                  ),
                   SkillsPage(
                     data: data,
                     character: _character,

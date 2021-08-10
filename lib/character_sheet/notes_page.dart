@@ -38,6 +38,12 @@ class NotesPage extends StatelessWidget {
             ],
           ),
         ),
+        TextEdit(
+          data["test"],
+          update: (value) {
+            character.set({"test": value}, SetOptions(merge: true));
+          },
+        ),
         const Spacer(),
         SizedBox(
           width: percentWidth(.9, context),

@@ -64,27 +64,27 @@ int abilityModifier(int ability) {
   switch (ability) {
     case 1:
       {
-        return 5;
+        return -5;
       }
     case 2:
     case 3:
       {
-        return 4;
+        return -4;
       }
     case 4:
     case 5:
       {
-        return 3;
+        return -3;
       }
     case 6:
     case 7:
       {
-        return 2;
+        return -2;
       }
     case 8:
     case 9:
       {
-        return 1;
+        return -1;
       }
     case 10:
     case 11:
@@ -152,6 +152,10 @@ double percentHeight(double percent, BuildContext context) {
   return MediaQuery.of(context).size.height * percent;
 }
 
+void emptyfunc(value) {}
+
+//TODO fix so you cant enter dicmal numbers (cause that shit breaks the code)
+
 class Abilitymodifiers extends StatelessWidget {
   Abilitymodifiers(
       {Key? key,
@@ -160,7 +164,8 @@ class Abilitymodifiers extends StatelessWidget {
       this.fontSize = 18,
       this.heigth = 0.08,
       this.width = 0.08,
-      this.labelfontsize = 22})
+      this.labelfontsize = 22,
+      this.update = emptyfunc})
       : super(key: key);
 
   final String label;
@@ -169,6 +174,8 @@ class Abilitymodifiers extends StatelessWidget {
   double labelfontsize;
   double heigth;
   double width;
+
+  void Function(String) update;
 
   @override
   Widget build(BuildContext context) {
@@ -188,11 +195,13 @@ class Abilitymodifiers extends StatelessWidget {
           child: Center(
             child: Column(
               children: [
-                Text(
+                TextEdit(
                   value.toString(),
                   style: TextStyle(
                     fontSize: fontSize,
                   ),
+                  update: update,
+                  inputType: TextInputType.number,
                 ),
                 const Divider(),
                 Text(
@@ -442,6 +451,42 @@ class MiniSheet extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class TextEdit extends StatelessWidget {
+  TextEdit(String this.value,
+      {Key? key,
+      this.alignment = TextAlign.center,
+      required this.update,
+      this.style = const TextStyle(),
+      this.inputType = TextInputType.text})
+      : super(key: key);
+  TextAlign alignment;
+  late TextEditingController _controller;
+  String value;
+  void Function(String) update;
+  TextStyle style;
+  TextInputType inputType;
+
+  FocusNode _focus = FocusNode();
+
+  @override
+  Widget build(BuildContext context) {
+    _controller = TextEditingController(text: value);
+
+    _focus.addListener(() {
+      update(_controller.text);
+    });
+
+    return TextField(
+      style: style,
+      focusNode: _focus,
+      controller: _controller,
+      decoration: null,
+      textAlign: alignment,
+      keyboardType: inputType,
     );
   }
 }
