@@ -189,12 +189,18 @@ class Abilitymodifiers extends StatelessWidget {
         ),
         ClipOval(
             child: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("assets/ability_modifier.png"))),
           width: percentHeight(heigth, context),
           height: percentHeight(width, context),
-          color: const Color.fromRGBO(225, 225, 225, 1),
+          //color: const Color.fromRGBO(225, 225, 225, 1),
           child: Center(
             child: Column(
               children: [
+                SizedBox(
+                  height: 10,
+                ),
                 TextEdit(
                   value.toString(),
                   style: TextStyle(
@@ -203,7 +209,6 @@ class Abilitymodifiers extends StatelessWidget {
                   update: update,
                   inputType: TextInputType.number,
                 ),
-                const Divider(),
                 Text(
                   modifier(abilityModifier(value)),
                   style: TextStyle(
