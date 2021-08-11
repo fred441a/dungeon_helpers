@@ -38,12 +38,13 @@ class NotesPage extends StatelessWidget {
             ],
           ),
         ),
-        TextEdit(
-          data["test"],
-          update: (value) {
-            character.set({"test": value}, SetOptions(merge: true));
-          },
-        ),
+        TextButton(
+            onPressed: () {
+              DiceSelector(context, "1d4", "test").then((value) {
+                print(value);
+              });
+            },
+            child: Text("Test")),
         const Spacer(),
         SizedBox(
           width: percentWidth(.9, context),
@@ -51,7 +52,7 @@ class NotesPage extends StatelessWidget {
             controller: _notes,
             focusNode: textUpdator(_notes, "notes", character),
             maxLines: null,
-            keyboardType: TextInputType.multiline,
+            //keyboardType: TextInputType.multiline,
             minLines: 25,
             decoration: const InputDecoration(
                 focusedBorder: OutlineInputBorder(

@@ -83,7 +83,20 @@ class RollerPage extends StatelessWidget {
                               children: [
                                 Text(keys[index].toString()),
                                 const Spacer(),
-                                Text(modifier(data["skills"][keys[index]]))
+                                GestureDetector(
+                                    onTap: () {
+                                      PlusMinusPopUp(
+                                              context,
+                                              data["skills"][keys[index]],
+                                              keys[index])
+                                          .then((value) {
+                                        character.set({
+                                          "skills": {keys[index]: value}
+                                        }, SetOptions(merge: true));
+                                      });
+                                    },
+                                    child: Text(
+                                        modifier(data["skills"][keys[index]])))
                               ],
                             ),
                             const Divider()
@@ -96,12 +109,36 @@ class RollerPage extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const Divider(),
-                SavingThrow(label: "Strength", data: data),
-                SavingThrow(label: "Dexterity", data: data),
-                SavingThrow(label: "Constitution", data: data),
-                SavingThrow(label: "Inteligence", data: data),
-                SavingThrow(label: "Wisdom", data: data),
-                SavingThrow(label: "Charisma", data: data),
+                SavingThrow(
+                  label: "Strength",
+                  data: data,
+                  character: character,
+                ),
+                SavingThrow(
+                  label: "Dexterity",
+                  data: data,
+                  character: character,
+                ),
+                SavingThrow(
+                  label: "Constitution",
+                  data: data,
+                  character: character,
+                ),
+                SavingThrow(
+                  label: "Inteligence",
+                  data: data,
+                  character: character,
+                ),
+                SavingThrow(
+                  label: "Wisdom",
+                  data: data,
+                  character: character,
+                ),
+                SavingThrow(
+                  label: "Charisma",
+                  data: data,
+                  character: character,
+                ),
               ],
             ))
       ],
@@ -110,40 +147,47 @@ class RollerPage extends StatelessWidget {
 }
 
 class SavingThrow extends StatelessWidget {
-  SavingThrow({Key? key, required this.label, required this.data})
+  SavingThrow(
+      {Key? key,
+      required this.label,
+      required this.data,
+      required this.character})
       : super(key: key);
 
   String label;
   Map<String, dynamic> data;
+  DocumentReference<Map<String, dynamic>> character;
 
   @override
   Widget build(BuildContext context) {
-    if (data["saving throws"][label.toLowerCase()]) {
-      return Column(
+    return GestureDetector(
+      onTap: () {
+        print("test");
+        if (data["saving throws"][label.toLowerCase()]) {
+          character.set({
+            "saving throws": {label.toLowerCase(): false}
+          }, SetOptions(merge: true));
+        } else {
+          character.set({
+            "saving throws": {label.toLowerCase(): true}
+          }, SetOptions(merge: true));
+        }
+      },
+      child: Column(
         children: [
           Row(
             children: [
               Text(label),
               const Spacer(),
-              Text(modifier(abilityModifier(data[label.toLowerCase()]) +
-                  proficiencyBonus(data["xp"])))
+              data["saving throws"][label.toLowerCase()]
+                  ? Text(modifier(abilityModifier(data[label.toLowerCase()]) +
+                      proficiencyBonus(data["xp"])))
+                  : Text(modifier(abilityModifier(data[label.toLowerCase()])))
             ],
           ),
           const Divider(),
         ],
-      );
-    }
-    return Column(
-      children: [
-        Row(
-          children: [
-            Text(label),
-            const Spacer(),
-            Text(modifier(abilityModifier(data[label.toLowerCase()])))
-          ],
-        ),
-        const Divider(),
-      ],
+      ),
     );
   }
 }

@@ -20,26 +20,62 @@ class ItemPage extends StatelessWidget {
             children: [
               Dinglebob(
                 label: "CP",
-                value: data["money"]["copper"].toString(),
+                value: data["money"]?["copper"] != null
+                    ? data["money"]["copper"].toString()
+                    : "0",
+                update: (value) {
+                  character.set({
+                    "money": {"copper": int.parse(value)}
+                  }, SetOptions(merge: true));
+                },
               ),
               Dinglebob(
                 label: "SP",
-                value: data["money"]["silver"].toString(),
+                value: data["money"]?["silver"] != null
+                    ? data["money"]["silver"].toString()
+                    : "0",
+                update: (value) {
+                  character.set({
+                    "money": {"silver": int.parse(value)}
+                  }, SetOptions(merge: true));
+                },
               ),
               Dinglebob(
                 label: "EP",
-                value: data["money"]["electrum"].toString(),
+                value: data["money"]?["electrum"] != null
+                    ? data["money"]["electrum"].toString()
+                    : "0",
+                update: (value) {
+                  character.set({
+                    "money": {"electrum": int.parse(value)}
+                  }, SetOptions(merge: true));
+                },
               ),
               Dinglebob(
                 label: "GP",
-                value: data["money"]["gold"].toString(),
+                value: data["money"]?["gold"] != null
+                    ? data["money"]["gold"].toString()
+                    : "0",
+                update: (value) {
+                  character.set({
+                    "money": {"gold": int.parse(value)}
+                  }, SetOptions(merge: true));
+                },
               ),
               Dinglebob(
                 label: "PP",
-                value: data["money"]["platinum"].toString(),
+                value: data["money"]?["platinum"] != null
+                    ? data["money"]["platinum"].toString()
+                    : "0",
+                update: (value) {
+                  character.set({
+                    "money": {"platinum": int.parse(value)}
+                  }, SetOptions(merge: true));
+                },
               ),
             ],
           ),
+          ElevatedButton(onPressed: () {}, child: Text("Convert spend")),
           Container(
               width: percentWidth(.9, context),
               child: TextField(

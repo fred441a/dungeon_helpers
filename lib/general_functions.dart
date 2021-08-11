@@ -1,5 +1,9 @@
+import 'dart:async';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/widgets.dart';
 
 int level(int xp) {
   if (xp < 300) {
@@ -187,14 +191,12 @@ class Abilitymodifiers extends StatelessWidget {
             fontSize: labelfontsize,
           ),
         ),
-        ClipOval(
-            child: Container(
+        Container(
           decoration: BoxDecoration(
               image: DecorationImage(
                   image: AssetImage("assets/ability_modifier.png"))),
           width: percentHeight(heigth, context),
           height: percentHeight(width, context),
-          //color: const Color.fromRGBO(225, 225, 225, 1),
           child: Center(
             child: Column(
               children: [
@@ -218,18 +220,26 @@ class Abilitymodifiers extends StatelessWidget {
               ],
             ),
           ),
-        ))
+        )
       ],
     );
   }
 }
 
 class Dinglebob extends StatelessWidget {
-  const Dinglebob({Key? key, required this.label, required this.value})
+  Dinglebob(
+      {Key? key,
+      required this.label,
+      required this.value,
+      this.update = emptyfunc,
+      this.editable = true})
       : super(key: key);
 
   final String label;
   final String value;
+  bool editable;
+
+  void Function(String) update;
 
   @override
   Widget build(BuildContext context) {
@@ -241,16 +251,28 @@ class Dinglebob extends StatelessWidget {
             children: [
               ClipOval(
                   child: Container(
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                  image: AssetImage("assets/dinglebob.png"),
+                )),
                 width: percentHeight(0.06, context),
                 height: percentHeight(0.06, context),
-                color: Colors.redAccent, //Color.fromRGBO(225, 225, 225, 1),
                 child: Center(
-                  child: Text(
-                    value,
-                    style: const TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
+                  child: editable
+                      ? TextEdit(
+                          value,
+                          style: const TextStyle(
+                            fontSize: 18,
+                          ),
+                          update: update,
+                          inputType: TextInputType.number,
+                        )
+                      : Text(
+                          value,
+                          style: const TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
                 ),
               )),
               Text(
@@ -333,7 +355,7 @@ class MiniSheet extends StatelessWidget {
                 children: [
                   const Spacer(),
                   Abilitymodifiers(
-                    label: "Strength",
+                    label: "Str",
                     value: data["strength"],
                     width: 0.06,
                     heigth: 0.06,
@@ -342,7 +364,7 @@ class MiniSheet extends StatelessWidget {
                   ),
                   const Spacer(),
                   Abilitymodifiers(
-                    label: "Dexterity",
+                    label: "Dex",
                     value: data["dexterity"],
                     width: 0.06,
                     heigth: 0.06,
@@ -351,7 +373,7 @@ class MiniSheet extends StatelessWidget {
                   ),
                   const Spacer(),
                   Abilitymodifiers(
-                    label: "Constitution",
+                    label: "Con",
                     value: data["constitution"],
                     width: 0.06,
                     heigth: 0.06,
@@ -360,7 +382,7 @@ class MiniSheet extends StatelessWidget {
                   ),
                   const Spacer(),
                   Abilitymodifiers(
-                    label: "Intelligence",
+                    label: "Int",
                     value: data["intelligence"],
                     width: 0.06,
                     heigth: 0.06,
@@ -369,7 +391,7 @@ class MiniSheet extends StatelessWidget {
                   ),
                   const Spacer(),
                   Abilitymodifiers(
-                    label: "Wisdom",
+                    label: "Wis",
                     value: data["wisdom"],
                     width: 0.06,
                     heigth: 0.06,
@@ -378,7 +400,7 @@ class MiniSheet extends StatelessWidget {
                   ),
                   const Spacer(),
                   Abilitymodifiers(
-                    label: "Charisma",
+                    label: "Char",
                     value: data["charisma"],
                     width: 0.06,
                     heigth: 0.06,
@@ -494,4 +516,117 @@ class TextEdit extends StatelessWidget {
       keyboardType: inputType,
     );
   }
+}
+
+Future<int> PlusMinusPopUp(BuildContext context, int value, String label) {
+  var completer = Completer<int>();
+  int returnval = value;
+
+  showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+            title: Text(label),
+            content: PlusMinusInput(
+              value: value,
+              onChanged: (int newval) {
+                returnval = newval;
+              },
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    completer.complete(returnval);
+                    Navigator.pop(context, "done");
+                  },
+                  child: Text("done"))
+            ],
+          ));
+
+  return completer.future;
+}
+
+class PlusMinusInput extends StatefulWidget {
+  PlusMinusInput({Key? key, required this.value, required this.onChanged})
+      : super(key: key);
+  int value;
+
+  void Function(int) onChanged;
+
+  @override
+  _PlusMinusInputState createState() => _PlusMinusInputState();
+}
+
+class _PlusMinusInputState extends State<PlusMinusInput> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        TextButton(
+            onPressed: () {
+              setState(() {
+                widget.value++;
+              });
+              widget.onChanged(widget.value);
+            },
+            child: Text("+")),
+        Text(widget.value.toString()),
+        TextButton(
+            onPressed: () {
+              setState(() {
+                widget.value--;
+              });
+              widget.onChanged(widget.value);
+            },
+            child: Text("-"))
+      ],
+    );
+  }
+}
+
+Future<String> DiceSelector(BuildContext context, String value, String label) {
+  var completer = Completer<String>();
+  TextEditingController _amountofDice =
+      TextEditingController(text: value.split("d")[0]);
+  TextEditingController _sidesofDice =
+      TextEditingController(text: value.split("d")[1]);
+
+  showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+            title: Text(label),
+            content: Container(
+              width: percentWidth(.8, context),
+              child: Row(
+                children: [
+                  Container(
+                    width: percentWidth(.1, context),
+                    child: TextField(
+                      textAlign: TextAlign.right,
+                      keyboardType: TextInputType.number,
+                      controller: _amountofDice,
+                    ),
+                  ),
+                  const Text("d"),
+                  Container(
+                    width: percentWidth(.1, context),
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      controller: _sidesofDice,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    completer
+                        .complete(_amountofDice.text + "d" + _sidesofDice.text);
+                    Navigator.pop(context, "done");
+                  },
+                  child: Text("done"))
+            ],
+          ));
+
+  return completer.future;
 }

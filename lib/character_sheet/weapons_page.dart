@@ -17,21 +17,30 @@ class WeaponsPage extends StatelessWidget {
       children: [
         Padding(
             padding: EdgeInsets.only(top: percentHeight(0.02, context)),
-            child: Dinglebob(
-              label: "HitDice",
-              value: data["hit dice"],
+            child: GestureDetector(
+              onTap: () {
+                DiceSelector(context, data["hit dice"], "Hit dice")
+                    .then((value) {
+                  character.set({"hit dice": value}, SetOptions(merge: true));
+                });
+              },
+              child: Dinglebob(
+                editable: false,
+                label: "Hit dice",
+                value: data["hit dice"],
+              ),
             )),
         Row(
           children: [
             ArmorShield(
               label: "Armor",
-              type: data["armor"]["name"],
-              value: modifier(data["armor"]["armor class"]),
+              type: data["armor"]?["name"] ?? "Nothing equipt",
+              value: modifier(data["armor"]?["armor class"] ?? 0),
             ),
             ArmorShield(
               label: "Shield",
-              type: data["shield"]["name"],
-              value: modifier(data["shield"]["armor class"]),
+              type: data["shield"]?["name"] ?? "Nothing equipt",
+              value: modifier(data["shield"]?["armor class"] ?? 0),
             )
           ],
         ),
@@ -102,7 +111,7 @@ class Weapons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(11),
@@ -115,24 +124,24 @@ class Weapons extends StatelessWidget {
                 children: [
                   Text(
                     weapon,
-                    style: TextStyle(fontSize: 18),
+                    style: const TextStyle(fontSize: 18),
                   ),
-                  Spacer(),
-                  VerticalDivider(
+                  const Spacer(),
+                  const VerticalDivider(
                     thickness: 1,
                     color: Colors.black,
                   ),
                   Text(
                     dmg,
-                    style: TextStyle(fontSize: 18),
+                    style: const TextStyle(fontSize: 18),
                   ),
-                  VerticalDivider(
+                  const VerticalDivider(
                     thickness: 1,
                     color: Colors.black,
                   ),
                   Text(
                     type,
-                    style: TextStyle(fontSize: 18),
+                    style: const TextStyle(fontSize: 18),
                   ),
                 ],
               ),
@@ -144,7 +153,10 @@ class Weapons extends StatelessWidget {
 
 class ArmorShield extends StatelessWidget {
   const ArmorShield(
-      {Key? key, required this.label, required this.type, required this.value})
+      {Key? key,
+      required this.label,
+      this.type = "nothing equipt",
+      this.value = "0d0"})
       : super(key: key);
   final String label;
   final String type;
@@ -152,13 +164,13 @@ class ArmorShield extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: percentWidth(0.5, context),
       child: Column(
         children: [
           Text(
             label,
-            style: TextStyle(fontSize: 22),
+            style: const TextStyle(fontSize: 22),
           ),
           Container(
               width: percentWidth(0.45, context),
@@ -167,22 +179,22 @@ class ArmorShield extends StatelessWidget {
                 border: Border.all(),
               ),
               child: Padding(
-                padding: EdgeInsets.all(2),
+                padding: const EdgeInsets.all(2),
                 child: IntrinsicHeight(
                   child: Row(
                     children: [
                       Text(
                         type,
-                        style: TextStyle(fontSize: 18),
+                        style: const TextStyle(fontSize: 18),
                       ),
-                      Spacer(),
-                      VerticalDivider(
+                      const Spacer(),
+                      const VerticalDivider(
                         thickness: 1,
                         color: Colors.black,
                       ),
                       Text(
                         value,
-                        style: TextStyle(fontSize: 18),
+                        style: const TextStyle(fontSize: 18),
                       ),
                     ],
                   ),

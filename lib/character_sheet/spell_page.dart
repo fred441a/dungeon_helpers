@@ -18,13 +18,26 @@ class SpellPage extends StatelessWidget {
         ),
         Row(
           children: [
-            Dinglebob(
-              label: "Spellcasting Ability",
-              value: modifier(data["spellcasting ability"]),
+            GestureDetector(
+              onTap: () {
+                //TODO make spellcasting ability automatic with class select
+                PlusMinusPopUp(context, data["spellcasting ability"],
+                        "Spellcasting Ability")
+                    .then((value) {
+                  character.set(
+                      {"spellcasting ability": value}, SetOptions(merge: true));
+                });
+              },
+              child: Dinglebob(
+                editable: false,
+                label: "Spellcasting Ability",
+                value: modifier(data["spellcasting ability"]),
+              ),
             ),
             Spacer(),
             Dinglebob(
               label: "Spell Save DC",
+              editable: false,
               value: (data["spellcasting ability"] +
                       proficiencyBonus(data["xp"]) +
                       8)
@@ -33,6 +46,7 @@ class SpellPage extends StatelessWidget {
             Spacer(),
             Dinglebob(
               label: "Spell Attack Bonus",
+              editable: false,
               value:
                   (data["spellcasting ability"] + proficiencyBonus(data["xp"]))
                       .toString(),

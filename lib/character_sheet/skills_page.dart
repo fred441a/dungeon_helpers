@@ -20,22 +20,44 @@ class SkillsPage extends StatelessWidget {
             children: [
               Dinglebob(
                 label: "Hitpoints",
-                value: data["hitpoints"].toString(),
+                value: data["hitpoints"] != null
+                    ? data["hitpoints"].toString()
+                    : 0.toString(),
+                update: (value) {
+                  character.set(
+                      {"hitpoints": int.parse(value)}, SetOptions(merge: true));
+                },
               ),
               Spacer(),
               Dinglebob(
                 label: "Armor Class",
-                value: data["armor class"].toString(),
+                value: data["armor class"] != null
+                    ? data["armor class"].toString()
+                    : 0.toString(),
+                update: (value) {
+                  character.set({"armor class": int.parse(value)},
+                      SetOptions(merge: true));
+                },
               ),
               Spacer(),
               Dinglebob(
+                editable: false,
                 label: "Proficiency bonus",
                 value: modifier(proficiencyBonus(data["xp"])),
               ),
               Spacer(),
-              Dinglebob(
-                label: "Speed",
-                value: data["speed"].toString() + "ft",
+              GestureDetector(
+                onTap: () {
+                  PlusMinusPopUp(context, data["speed"] ?? 0, "speed")
+                      .then((value) {
+                    character.set({"speed": value}, SetOptions(merge: true));
+                  });
+                },
+                child: Dinglebob(
+                  editable: false,
+                  label: "Speed",
+                  value: data["speed"].toString() + "ft",
+                ),
               )
             ],
           ),
