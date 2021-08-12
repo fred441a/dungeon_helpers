@@ -38,11 +38,31 @@ class CharacterSheetPage extends StatelessWidget {
             child: Scaffold(
               resizeToAvoidBottomInset: true,
               appBar: AppBar(
-                title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                title: Row(
                   children: [
-                    Text("${data["name"]} - ${level(data["xp"])}"),
-                    Text("${data["race"]}, ${data["class"]}")
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("${data["name"]} - ${level(data["xp"])}"),
+                        Text("${data["race"]}, ${data["class"]}")
+                      ],
+                    ),
+                    Spacer(),
+                    PopupMenuButton(
+                      icon: Icon(Icons.more_vert),
+                      itemBuilder: (context) {
+                        return [
+                          PopupMenuItem(
+                            value: "Delete",
+                            onTap: () {
+                              Navigator.pop(context, "Delete");
+                              _character.delete();
+                            },
+                            child: const Text("Delete"),
+                          )
+                        ];
+                      },
+                    )
                   ],
                 ),
                 bottom: const TabBar(tabs: [

@@ -159,6 +159,7 @@ double percentHeight(double percent, BuildContext context) {
 void emptyfunc(value) {}
 
 //TODO fix so you cant enter dicmal numbers (cause that shit breaks the code)
+//also 0 breaks the code too;
 
 class Abilitymodifiers extends StatelessWidget {
   Abilitymodifiers(
@@ -557,23 +558,58 @@ class PlusMinusInput extends StatefulWidget {
 }
 
 class _PlusMinusInputState extends State<PlusMinusInput> {
+  TextEditingController _controller = TextEditingController();
+  final FocusNode _focus = FocusNode();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focus.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    _controller = TextEditingController(text: widget.value.toString());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         TextButton(
             onPressed: () {
+              _focus.unfocus();
               setState(() {
                 widget.value++;
+                _controller =
+                    TextEditingController(text: widget.value.toString());
               });
               widget.onChanged(widget.value);
             },
             child: Text("+")),
-        Text(widget.value.toString()),
+        SizedBox(
+          width: 20,
+          child: TextField(
+            keyboardType: TextInputType.number,
+            controller: _controller,
+            focusNode: _focus,
+            onChanged: (value) {
+              if (value != "") {
+                widget.value = int.parse(value);
+                widget.onChanged(widget.value);
+              }
+            },
+          ),
+        ),
         TextButton(
             onPressed: () {
+              _focus.unfocus();
               setState(() {
                 widget.value--;
+                _controller =
+                    TextEditingController(text: widget.value.toString());
               });
               widget.onChanged(widget.value);
             },

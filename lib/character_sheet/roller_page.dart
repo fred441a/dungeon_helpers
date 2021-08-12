@@ -84,6 +84,7 @@ class RollerPage extends StatelessWidget {
                                 Text(keys[index].toString()),
                                 const Spacer(),
                                 GestureDetector(
+                                    behavior: HitTestBehavior.opaque,
                                     onTap: () {
                                       PlusMinusPopUp(
                                               context,
@@ -161,6 +162,7 @@ class SavingThrow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
         print("test");
         if (data["saving throws"][label.toLowerCase()]) {
