@@ -77,31 +77,29 @@ class RollerPage extends StatelessWidget {
                       itemCount: data["skills"].length,
                       itemBuilder: (BuildContext context, int index) {
                         var keys = data["skills"].keys.toList()..sort();
-                        return Column(
-                          children: [
-                            Row(
-                              children: [
-                                Text(keys[index].toString()),
-                                const Spacer(),
-                                GestureDetector(
-                                    behavior: HitTestBehavior.opaque,
-                                    onTap: () {
-                                      PlusMinusPopUp(
-                                              context,
-                                              data["skills"][keys[index]],
-                                              keys[index])
-                                          .then((value) {
-                                        character.set({
-                                          "skills": {keys[index]: value}
-                                        }, SetOptions(merge: true));
-                                      });
-                                    },
-                                    child: Text(
-                                        modifier(data["skills"][keys[index]])))
-                              ],
-                            ),
-                            const Divider()
-                          ],
+                        return GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                            PlusMinusPopUp(context, data["skills"][keys[index]],
+                                    keys[index])
+                                .then((value) {
+                              character.set({
+                                "skills": {keys[index]: value}
+                              }, SetOptions(merge: true));
+                            });
+                          },
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Text(keys[index].toString()),
+                                  const Spacer(),
+                                  Text(modifier(data["skills"][keys[index]]))
+                                ],
+                              ),
+                              const Divider()
+                            ],
+                          ),
                         );
                       }),
                 ),

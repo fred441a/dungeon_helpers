@@ -1,10 +1,8 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dungeonhelper/general_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:developer';
 
 // TODO add a way to delet monsters
 // make monsters editable
@@ -110,6 +108,12 @@ class _MonsterSearchContentState extends State<MonsterSearchContent> {
         _monsterJson = jsonDecode(respons.body);
       });
     }
+  }
+
+  @override
+  initState() {
+    updateSearch("");
+    super.initState();
   }
 
   String nestedArrayRemover(String jsoninput) {

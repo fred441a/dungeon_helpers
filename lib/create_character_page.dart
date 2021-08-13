@@ -88,6 +88,8 @@ class CharacterCreationPage extends StatelessWidget {
   }
 }
 
+//TODO a whole lot
+//but first of all you need to set max hitpoints and max spellslots based on class and level
 Future<DocumentReference<Map<String, dynamic>>> CreateCharSheet(
     String name, String dndclass, String race, int xp) {
   var db = FirebaseFirestore.instance.collection("Characters");
