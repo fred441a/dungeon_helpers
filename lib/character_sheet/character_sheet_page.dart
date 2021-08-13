@@ -58,8 +58,37 @@ class CharacterSheetPage extends StatelessWidget {
                           PopupMenuItem(
                             value: "Delete",
                             onTap: () {
-                              Navigator.pop(context, "Delete");
-                              _character.delete();
+                              Future.delayed(Duration(milliseconds: 10))
+                                  .then((value) {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                          title: const Text("Are you sure?!"),
+                                          content: const Text(
+                                              "Are you sure you want to delete this character.\n ones this character is deleted it cannot be returned"),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(
+                                                      context, "Delete");
+                                                  Navigator.pop(
+                                                      context, "Delete");
+                                                  Future.delayed(const Duration(
+                                                          seconds: 1))
+                                                      .then((value) {
+                                                    _character.delete();
+                                                  });
+                                                },
+                                                child: const Text("Delete")),
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text("Cancel"))
+                                          ],
+                                        ));
+                              });
                             },
                             child: const Text("Delete"),
                           ),
