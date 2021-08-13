@@ -40,9 +40,11 @@ class NotesPage extends StatelessWidget {
         ),
         TextButton(
             onPressed: () {
-              DiceSelector(context, "1d4", "test").then((value) {
-                print(value);
-              });
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                        content: Text("Test"),
+                      ));
             },
             child: Text("Test")),
         const Spacer(),

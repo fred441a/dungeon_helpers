@@ -243,7 +243,7 @@ class SpellSheet extends StatelessWidget {
                               "Material: ",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            Text(data["material"])
+                            Flexible(child: Text(data["material"]))
                           ],
                         )
                       : Container(),

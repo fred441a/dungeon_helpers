@@ -5,8 +5,11 @@ import 'package:dungeonhelper/character_sheet/spell_page.dart';
 import 'package:dungeonhelper/character_sheet/weapons_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'roller_page.dart';
 import '../general_functions.dart';
+import 'package:nfc_manager/nfc_manager.dart';
 
 class CharacterSheetPage extends StatelessWidget {
   const CharacterSheetPage({Key? key, required this.characterId})
@@ -59,7 +62,70 @@ class CharacterSheetPage extends StatelessWidget {
                               _character.delete();
                             },
                             child: const Text("Delete"),
-                          )
+                          ),
+                          PopupMenuItem(
+                            child: const Text("Write"),
+                            onTap: () {
+                              Future.delayed(Duration(milliseconds: 10))
+                                  .then((value) {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                          content: SizedBox(
+                                            height: percentHeight(.24, context),
+                                            child: Column(
+                                              children: const [
+                                                Icon(
+                                                  Icons.nfc,
+                                                  size: 150,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                    "Place minifig on NFC chip")
+                                              ],
+                                            ),
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                                onPressed: () {
+                                                  NfcManager.instance
+                                                      .stopSession();
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text("Cancel"))
+                                          ],
+                                        ));
+                              });
+                              NfcManager.instance.startSession(
+                                  onDiscovered: (NfcTag tag) async {
+                                var ndef = Ndef.from(tag);
+                                if (ndef == null || !ndef.isWritable) {
+                                  NfcManager.instance.stopSession(
+                                      errorMessage: "NFC tag is not writable");
+                                  Navigator.pop(context);
+                                  return;
+                                }
+                                NdefMessage message = NdefMessage([
+                                  NdefRecord.createText(_character.id),
+                                ]);
+
+                                try {
+                                  await ndef.write(message);
+                                  Navigator.pop(context);
+                                  Future.delayed(Duration(seconds: 10))
+                                      .then((value) {
+                                    NfcManager.instance.stopSession();
+                                  });
+                                } catch (e) {
+                                  NfcManager.instance
+                                      .stopSession(errorMessage: e.toString());
+                                  Navigator.pop(context);
+                                  return;
+                                }
+                              });
+                            },
+                          ),
                         ];
                       },
                     )
