@@ -11,6 +11,26 @@ class SpellPage extends StatelessWidget {
   Map<String, dynamic> data;
   DocumentReference<Map<String, dynamic>> character;
 
+  int SpellcastingAbility(String? ability) {
+    switch (ability) {
+      case "cha":
+        return data["charisma"];
+      case "con":
+        return data["constitution"];
+      case "dex":
+        return data["dexterity"];
+      case "int":
+        return data["inteligence"];
+      case "str":
+        return data["strength"];
+      case "wis":
+        return data["wisdom"];
+      case null:
+        return 1;
+    }
+    throw Error();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -20,27 +40,18 @@ class SpellPage extends StatelessWidget {
         ),
         Row(
           children: [
-            GestureDetector(
-              onTap: () {
-                //TODO make spellcasting ability automatic with class select
-                PlusMinusPopUp(context, data["spellcasting ability"],
-                        "Spellcasting Ability")
-                    .then((value) {
-                  character.set(
-                      {"spellcasting ability": value}, SetOptions(merge: true));
-                });
-              },
-              child: Dinglebob(
-                editable: false,
-                label: "Spellcasting Ability",
-                value: modifier(data["spellcasting ability"]),
-              ),
+            Dinglebob(
+              editable: false,
+              label: "Spellcasting Ability",
+              value: modifier(abilityModifier(
+                  SpellcastingAbility(data["spellcasting modifier"]))),
             ),
             Spacer(),
             Dinglebob(
               label: "Spell Save DC",
               editable: false,
-              value: (data["spellcasting ability"] +
+              value: (abilityModifier(
+                          SpellcastingAbility(data["spellcasting modifier"])) +
                       proficiencyBonus(data["xp"]) +
                       8)
                   .toString(),
@@ -49,9 +60,10 @@ class SpellPage extends StatelessWidget {
             Dinglebob(
               label: "Spell Attack Bonus",
               editable: false,
-              value:
-                  (data["spellcasting ability"] + proficiencyBonus(data["xp"]))
-                      .toString(),
+              value: (abilityModifier(
+                          SpellcastingAbility(data["spellcasting modifier"])) +
+                      proficiencyBonus(data["xp"]))
+                  .toString(),
             ),
           ],
         ),

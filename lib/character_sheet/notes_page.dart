@@ -24,13 +24,14 @@ class NotesPage extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   character.set({
-                    "hitpoints": data["max hit points"],
+                    "hitpoints": data["max hitpoints"],
                     "spells": {"spellslots": data["spells"]["total spellslots"]}
                   }, SetOptions(merge: true));
                 },
                 child: const Text("Long Rest"),
               ),
               Spacer(),
+              //TODO
               ElevatedButton(
                 onPressed: () {},
                 child: const Text("Short Rest"),
@@ -38,15 +39,6 @@ class NotesPage extends StatelessWidget {
             ],
           ),
         ),
-        TextButton(
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                        content: Text("Test"),
-                      ));
-            },
-            child: Text("Test")),
         const Spacer(),
         SizedBox(
           width: percentWidth(.9, context),

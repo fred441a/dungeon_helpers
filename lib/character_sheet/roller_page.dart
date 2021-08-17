@@ -162,7 +162,6 @@ class SavingThrow extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
-        print("test");
         if (data["saving throws"][label.toLowerCase()]) {
           character.set({
             "saving throws": {label.toLowerCase(): false}

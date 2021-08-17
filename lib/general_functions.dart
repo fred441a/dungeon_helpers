@@ -23,6 +23,14 @@ int level(int xp) {
   } else if (xp >= 34000 && xp < 48000) {
     return 8;
   } else if (xp >= 48000 && xp < 64000) {
+    return 9;
+  } else if (xp >= 64000 && xp < 85000) {
+    return 10;
+  } else if (xp >= 85000 && xp < 100000) {
+    return 11;
+  } else if (xp >= 100000 && xp < 120000) {
+    return 12;
+  } else if (xp >= 120000 && xp < 140000) {
     return 13;
   } else if (xp >= 140000 && xp < 165000) {
     return 14;
@@ -40,6 +48,52 @@ int level(int xp) {
     return 20;
   }
   throw Exception("Incorrect xp value");
+}
+
+int xp(int level) {
+  switch (level) {
+    case 1:
+      return 0;
+    case 2:
+      return 300;
+    case 3:
+      return 900;
+    case 4:
+      return 2700;
+    case 5:
+      return 6500;
+    case 6:
+      return 14000;
+    case 7:
+      return 23000;
+    case 8:
+      return 34000;
+    case 9:
+      return 48000;
+    case 10:
+      return 64000;
+    case 11:
+      return 85000;
+    case 12:
+      return 100000;
+    case 13:
+      return 120000;
+    case 14:
+      return 140000;
+    case 15:
+      return 165000;
+    case 16:
+      return 195000;
+    case 17:
+      return 225000;
+    case 18:
+      return 265000;
+    case 19:
+      return 305000;
+    case 20:
+      return 355000;
+  }
+  throw Exception("Incorrect level value");
 }
 
 int proficiencyBonus(int xp) {

@@ -37,7 +37,7 @@ class CharacterSheetPage extends StatelessWidget {
           Map<String, dynamic> data =
               snapshot.data!.data() as Map<String, dynamic>;
           return DefaultTabController(
-            length: 6,
+            length: data["spellcasting modifier"] != null ? 6 : 5,
             child: Scaffold(
               resizeToAvoidBottomInset: true,
               appBar: AppBar(
@@ -75,7 +75,7 @@ class CharacterSheetPage extends StatelessWidget {
                                                   Navigator.pop(
                                                       context, "Delete");
                                                   Future.delayed(const Duration(
-                                                          seconds: 1))
+                                                          milliseconds: 1))
                                                       .then((value) {
                                                     _character.delete();
                                                   });
@@ -160,53 +160,76 @@ class CharacterSheetPage extends StatelessWidget {
                     )
                   ],
                 ),
-                bottom: const TabBar(tabs: [
-                  Tab(
-                    icon: Icon(Icons.casino),
-                  ),
-                  Tab(
-                    icon: Icon(Icons.menu_book),
-                  ),
-                  Tab(icon: Icon(Icons.hardware)),
-                  Tab(
-                    icon: Icon(Icons.local_mall),
-                  ),
-                  Tab(
-                    icon: Icon(Icons.auto_fix_high),
-                  ),
-                  Tab(
-                    icon: Icon(Icons.description),
-                  )
-                ]),
+                bottom: data["spellcasting modifier"] != null
+                    ? const TabBar(tabs: [
+                        Tab(icon: Icon(Icons.casino)),
+                        Tab(icon: Icon(Icons.menu_book)),
+                        Tab(icon: Icon(Icons.hardware)),
+                        Tab(icon: Icon(Icons.local_mall)),
+                        Tab(icon: Icon(Icons.auto_fix_high)),
+                        Tab(icon: Icon(Icons.description))
+                      ])
+                    : const TabBar(tabs: [
+                        Tab(icon: Icon(Icons.casino)),
+                        Tab(icon: Icon(Icons.menu_book)),
+                        Tab(icon: Icon(Icons.hardware)),
+                        Tab(icon: Icon(Icons.local_mall)),
+                        Tab(icon: Icon(Icons.description))
+                      ]),
               ),
-              body: TabBarView(
-                children: [
-                  RollerPage(
-                    data: data,
-                    character: _character,
-                  ),
-                  SkillsPage(
-                    data: data,
-                    character: _character,
-                  ),
-                  WeaponsPage(
-                    data: data,
-                    character: _character,
-                  ),
-                  ItemPage(
-                    data: data,
-                    character: _character,
-                  ),
-                  SpellPage(
-                    data: data,
-                    character: _character,
-                  ),
-                  NotesPage(
-                    data: data,
-                    character: _character,
-                  ),
-                ],
-              ),
+              body: data["spellcasting modifier"] != null
+                  ? TabBarView(
+                      children: [
+                        RollerPage(
+                          data: data,
+                          character: _character,
+                        ),
+                        SkillsPage(
+                          data: data,
+                          character: _character,
+                        ),
+                        WeaponsPage(
+                          data: data,
+                          character: _character,
+                        ),
+                        ItemPage(
+                          data: data,
+                          character: _character,
+                        ),
+                        SpellPage(
+                          data: data,
+                          character: _character,
+                        ),
+                        NotesPage(
+                          data: data,
+                          character: _character,
+                        ),
+                      ],
+                    )
+                  : TabBarView(
+                      children: [
+                        RollerPage(
+                          data: data,
+                          character: _character,
+                        ),
+                        SkillsPage(
+                          data: data,
+                          character: _character,
+                        ),
+                        WeaponsPage(
+                          data: data,
+                          character: _character,
+                        ),
+                        ItemPage(
+                          data: data,
+                          character: _character,
+                        ),
+                        NotesPage(
+                          data: data,
+                          character: _character,
+                        ),
+                      ],
+                    ),
             ),
           );
         });
