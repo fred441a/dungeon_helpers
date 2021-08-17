@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'character_sheet/character_sheet_page.dart';
 import 'group_sheet/group_sheet.dart';
 import 'create_character_page.dart';
+import 'dart:io' show Platform;
+import 'package:nfc_manager/nfc_manager.dart';
 
 class PostLoginPage extends StatefulWidget {
   PostLoginPage({Key? key}) : super(key: key);
@@ -18,10 +20,39 @@ class _PostLoginPageState extends State<PostLoginPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
+  void _NFCOpenCharacter(Map data) async {
+    if (data["ndef"]["cachedMessage"]["records"][0]["type"][0] != 84) {
+      print("Not Text NFC");
+      return;
+    }
+
+    String characterId = String.fromCharCodes(
+        data["ndef"]["cachedMessage"]["records"][0]["payload"]);
+    characterId = characterId.replaceAll("en", "");
+
+    DocumentSnapshot<Map<String, dynamic>> db = await FirebaseFirestore.instance
+        .collection("Characters")
+        .doc(characterId)
+        .get();
+
+    Map<String, dynamic> dbdata = db.data() as Map<String, dynamic>;
+
+    if (dbdata == null) {
+      print("This char does not exist!");
+      return;
+    }
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) =>
+                CharacterSheetPage(characterId: characterId)));
+  }
+
   @override
   void initState() {
-    super.initState();
     _tabController = TabController(length: 2, vsync: this, initialIndex: 0);
+    super.initState();
   }
 
   @override
@@ -43,6 +74,14 @@ class _PostLoginPageState extends State<PostLoginPage>
 
   @override
   Widget build(BuildContext context) {
+    if (Platform.isAndroid) {
+      NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+        _NFCOpenCharacter(tag.data);
+        Future.delayed(Duration(seconds: 1)).then((value) {
+          NfcManager.instance.stopSession();
+        });
+      });
+    }
     return Scaffold(
       appBar: AppBar(
         title: TabBar(

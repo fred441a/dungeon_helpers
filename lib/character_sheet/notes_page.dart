@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../general_functions.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:nfc_manager/nfc_manager.dart';
 
 class NotesPage extends StatelessWidget {
   NotesPage({Key? key, required this.data, required this.character})
@@ -39,6 +40,15 @@ class NotesPage extends StatelessWidget {
             ],
           ),
         ),
+        TextButton(
+            onPressed: () {
+              NfcManager.instance.startSession(
+                  onDiscovered: (NfcTag tag) async {
+                print(tag.data);
+                NfcManager.instance.stopSession();
+              });
+            },
+            child: const Text("test")),
         const Spacer(),
         SizedBox(
           width: percentWidth(.9, context),
