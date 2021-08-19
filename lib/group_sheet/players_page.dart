@@ -1,20 +1,32 @@
 import 'package:flutter/material.dart';
 import '../character_sheet/character_sheet_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../general_functions.dart';
+import 'add_player.dart';
 
 //TODO fix player rules so that players with different owners can be seen by dm
 
 class PlayerPage extends StatelessWidget {
-  PlayerPage({Key? key, required this.data}) : super(key: key);
+  PlayerPage({Key? key, required this.data, required this.groupData})
+      : super(key: key);
 
   Map<String, dynamic> data;
+  DocumentReference<Map<String, dynamic>> groupData;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ElevatedButton(onPressed: () {}, child: Text("Add Player +")),
+        ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => AddPlayerPage(
+                            groupData: groupData,
+                            data: data,
+                          )));
+            },
+            child: Text("Add Player +")),
         Expanded(
           child: ListView.builder(
             itemCount: data["members"].length,
