@@ -22,7 +22,40 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
 
   late QRViewController controller;
 
-  bool _usecamera = false;
+  bool _usecamera = true;
+
+  @override
+  void initState() {
+    NFCAvailable();
+    super.initState();
+  }
+
+  void NFCAvailable() async {
+    bool isAvailable = await NfcManager.instance.isAvailable();
+    if (isAvailable) {
+      if (Platform.isAndroid) {
+        NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+          if (tag.data["ndef"]["cachedMessage"]["records"][0]["type"][0] !=
+              84) {
+            print("Not Text NFC");
+            return;
+          }
+
+          String characterId = String.fromCharCodes(
+              tag.data["ndef"]["cachedMessage"]["records"][0]["payload"]);
+          characterId = characterId.replaceAll("en", "");
+
+          AddCharacter(characterId);
+          Future.delayed(Duration(seconds: 1)).then((value) {
+            NfcManager.instance.stopSession();
+          });
+        });
+      }
+      setState(() {
+        _usecamera = false;
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -41,24 +74,6 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isAndroid) {
-      NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
-        if (tag.data["ndef"]["cachedMessage"]["records"][0]["type"][0] != 84) {
-          print("Not Text NFC");
-          return;
-        }
-
-        String characterId = String.fromCharCodes(
-            tag.data["ndef"]["cachedMessage"]["records"][0]["payload"]);
-        characterId = characterId.replaceAll("en", "");
-
-        AddCharacter(characterId);
-        Future.delayed(Duration(seconds: 1)).then((value) {
-          NfcManager.instance.stopSession();
-        });
-      });
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text("Add a player to the group"),

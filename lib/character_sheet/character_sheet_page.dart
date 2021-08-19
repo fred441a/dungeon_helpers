@@ -10,6 +10,7 @@ import 'roller_page.dart';
 import '../general_functions.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:dungeonhelper/rpg_icons_icons.dart';
 
 class CharacterSheetPage extends StatelessWidget {
   const CharacterSheetPage(
@@ -121,15 +122,30 @@ class CharacterSheetPage extends StatelessWidget {
                           ),
                           PopupMenuItem(
                             child: const Text("Write"),
-                            onTap: () {
+                            onTap: () async {
+                              bool isAvailable =
+                                  await NfcManager.instance.isAvailable();
                               Future.delayed(Duration(milliseconds: 10))
                                   .then((value) {
                                 showDialog(
                                     context: context,
-                                    builder: (BuildContext context) =>
-                                        NfcWriteWidget(
-                                          character: _character,
-                                        ));
+                                    builder: (BuildContext context) {
+                                      if (isAvailable) {
+                                        return NfcWriteWidget(
+                                            character: _character);
+                                      }
+                                      return AlertDialog(
+                                        content: const Text(
+                                            "Your device does no support NFC"),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text("Ok"))
+                                        ],
+                                      );
+                                    });
                               });
                             },
                           ),

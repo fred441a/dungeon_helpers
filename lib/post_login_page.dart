@@ -75,16 +75,23 @@ class _PostLoginPageState extends State<PostLoginPage>
     }
   }
 
+  void startNfc() async {
+    bool isAvailable = await NfcManager.instance.isAvailable();
+    if (isAvailable) {
+      if (Platform.isAndroid) {
+        NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+          _NFCOpenCharacter(tag.data);
+          Future.delayed(Duration(seconds: 1)).then((value) {
+            NfcManager.instance.stopSession();
+          });
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (Platform.isAndroid) {
-      NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
-        _NFCOpenCharacter(tag.data);
-        Future.delayed(Duration(seconds: 1)).then((value) {
-          NfcManager.instance.stopSession();
-        });
-      });
-    }
+    startNfc();
     return Scaffold(
       appBar: AppBar(
         title: TabBar(
