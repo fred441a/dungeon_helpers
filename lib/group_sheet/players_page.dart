@@ -40,6 +40,8 @@ class PlayerPage extends StatelessWidget {
                         MaterialPageRoute(
                             builder: (context) => CharacterSheetPage(
                                   characterId: data["members"][index].id,
+                                  groupId: groupData.id,
+                                  deleteStatus: false,
                                 )));
                   },
                   child: FutureBuilder(

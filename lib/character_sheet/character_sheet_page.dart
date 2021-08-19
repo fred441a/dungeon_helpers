@@ -13,11 +13,25 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 class CharacterSheetPage extends StatelessWidget {
   const CharacterSheetPage(
-      {Key? key, required this.characterId, this.deleteStatus = true})
+      {Key? key,
+      required this.characterId,
+      this.deleteStatus = true,
+      this.groupId = ""})
       : super(key: key);
   final String characterId;
 
   final bool deleteStatus;
+  final String groupId;
+
+  void RemoveChar() async {
+    var db = FirebaseFirestore.instance.collection("Groups").doc(groupId);
+    var dbdata = await db.get();
+    Map<String, dynamic> data = dbdata.data() as Map<String, dynamic>;
+    List tempArray = data["members"];
+    tempArray.remove(
+        FirebaseFirestore.instance.collection("Characters").doc(characterId));
+    db.set({"members": tempArray}, SetOptions(merge: true));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,38 +67,45 @@ class CharacterSheetPage extends StatelessWidget {
                         Text("${data["race"]}, ${data["class"]}")
                       ],
                     ),
-                    Spacer(),
+                    const Spacer(),
                     PopupMenuButton(
-                      icon: Icon(Icons.more_vert),
+                      icon: const Icon(Icons.more_vert),
                       itemBuilder: (context) {
                         return [
                           //TODO Dm should now be allowed to delete charachters
                           PopupMenuItem(
-                            value: "Delete",
+                            value: deleteStatus ? "Delete" : "Remove player",
                             onTap: () {
-                              Future.delayed(Duration(milliseconds: 10))
+                              Future.delayed(const Duration(milliseconds: 10))
                                   .then((value) {
                                 showDialog(
                                     context: context,
                                     builder: (BuildContext context) =>
                                         AlertDialog(
                                           title: const Text("Are you sure?!"),
-                                          content: const Text(
-                                              "Are you sure you want to delete this character.\n ones this character is deleted it cannot be returned"),
+                                          content: deleteStatus
+                                              ? const Text(
+                                                  "Are you sure you want to delete this character.\n ones this character is deleted it cannot be returned")
+                                              : const Text(
+                                                  "Are you sure you want to Remove this character."),
                                           actions: [
                                             TextButton(
                                                 onPressed: () {
-                                                  Navigator.pop(
-                                                      context, "Delete");
-                                                  Navigator.pop(
-                                                      context, "Delete");
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
                                                   Future.delayed(const Duration(
                                                           milliseconds: 500))
-                                                      .then((value) {
-                                                    _character.delete();
+                                                      .then((value) async {
+                                                    if (deleteStatus) {
+                                                      _character.delete();
+                                                    } else {
+                                                      RemoveChar();
+                                                    }
                                                   });
                                                 },
-                                                child: const Text("Delete")),
+                                                child: deleteStatus
+                                                    ? const Text("Delete")
+                                                    : const Text("Remove")),
                                             TextButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
@@ -94,7 +115,9 @@ class CharacterSheetPage extends StatelessWidget {
                                         ));
                               });
                             },
-                            child: const Text("Delete"),
+                            child: deleteStatus
+                                ? const Text("Delete")
+                                : const Text("Remove"),
                           ),
                           PopupMenuItem(
                             child: const Text("Write"),

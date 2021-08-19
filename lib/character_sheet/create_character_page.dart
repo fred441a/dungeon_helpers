@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
-import 'character_sheet/character_sheet_page.dart';
+import 'character_sheet_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
