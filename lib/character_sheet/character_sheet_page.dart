@@ -10,7 +10,7 @@ import 'roller_page.dart';
 import '../general_functions.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:dungeonhelper/rpg_icons_icons.dart';
+import 'package:fluttericon/rpg_awesome_icons.dart';
 
 class CharacterSheetPage extends StatelessWidget {
   const CharacterSheetPage(
@@ -58,132 +58,138 @@ class CharacterSheetPage extends StatelessWidget {
             length: data["spellcasting modifier"] != null ? 6 : 5,
             child: Scaffold(
               resizeToAvoidBottomInset: true,
-              appBar: AppBar(
-                title: Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("${data["name"]} - ${level(data["xp"])}"),
-                        Text("${data["race"]}, ${data["class"]}")
-                      ],
-                    ),
-                    const Spacer(),
-                    PopupMenuButton(
-                      icon: const Icon(Icons.more_vert),
-                      itemBuilder: (context) {
-                        return [
-                          //TODO Dm should now be allowed to delete charachters
-                          PopupMenuItem(
-                            value: deleteStatus ? "Delete" : "Remove player",
-                            onTap: () {
-                              Future.delayed(const Duration(milliseconds: 10))
-                                  .then((value) {
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        AlertDialog(
-                                          title: const Text("Are you sure?!"),
-                                          content: deleteStatus
-                                              ? const Text(
-                                                  "Are you sure you want to delete this character.\n ones this character is deleted it cannot be returned")
-                                              : const Text(
-                                                  "Are you sure you want to Remove this character."),
+              appBar: AppBarDecor(
+                height: 125,
+                appbar: AppBar(
+                  elevation: 0,
+                  title: Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("${data["name"]} - ${level(data["xp"])}"),
+                          Text("${data["race"]}, ${data["class"]}")
+                        ],
+                      ),
+                      const Spacer(),
+                      PopupMenuButton(
+                        icon: const Icon(Icons.more_vert),
+                        itemBuilder: (context) {
+                          return [
+                            //TODO Dm should now be allowed to delete charachters
+                            PopupMenuItem(
+                              value: deleteStatus ? "Delete" : "Remove player",
+                              onTap: () {
+                                Future.delayed(const Duration(milliseconds: 10))
+                                    .then((value) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          AlertDialog(
+                                            title: const Text("Are you sure?!"),
+                                            content: deleteStatus
+                                                ? const Text(
+                                                    "Are you sure you want to delete this character.\n ones this character is deleted it cannot be returned")
+                                                : const Text(
+                                                    "Are you sure you want to Remove this character."),
+                                            actions: [
+                                              TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+                                                    Future.delayed(
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    500))
+                                                        .then((value) async {
+                                                      if (deleteStatus) {
+                                                        _character.delete();
+                                                      } else {
+                                                        RemoveChar();
+                                                      }
+                                                    });
+                                                  },
+                                                  child: deleteStatus
+                                                      ? const Text("Delete")
+                                                      : const Text("Remove")),
+                                              TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text("Cancel"))
+                                            ],
+                                          ));
+                                });
+                              },
+                              child: deleteStatus
+                                  ? const Text("Delete")
+                                  : const Text("Remove"),
+                            ),
+                            PopupMenuItem(
+                              child: const Text("Write"),
+                              onTap: () async {
+                                bool isAvailable =
+                                    await NfcManager.instance.isAvailable();
+                                Future.delayed(Duration(milliseconds: 10))
+                                    .then((value) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        if (isAvailable) {
+                                          return NfcWriteWidget(
+                                              character: _character);
+                                        }
+                                        return AlertDialog(
+                                          content: const Text(
+                                              "Your device does no support NFC"),
                                           actions: [
                                             TextButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Future.delayed(const Duration(
-                                                          milliseconds: 500))
-                                                      .then((value) async {
-                                                    if (deleteStatus) {
-                                                      _character.delete();
-                                                    } else {
-                                                      RemoveChar();
-                                                    }
-                                                  });
                                                 },
-                                                child: deleteStatus
-                                                    ? const Text("Delete")
-                                                    : const Text("Remove")),
-                                            TextButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: const Text("Cancel"))
+                                                child: const Text("Ok"))
                                           ],
-                                        ));
-                              });
-                            },
-                            child: deleteStatus
-                                ? const Text("Delete")
-                                : const Text("Remove"),
-                          ),
-                          PopupMenuItem(
-                            child: const Text("Write"),
-                            onTap: () async {
-                              bool isAvailable =
-                                  await NfcManager.instance.isAvailable();
-                              Future.delayed(Duration(milliseconds: 10))
-                                  .then((value) {
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      if (isAvailable) {
-                                        return NfcWriteWidget(
-                                            character: _character);
-                                      }
-                                      return AlertDialog(
-                                        content: const Text(
-                                            "Your device does no support NFC"),
-                                        actions: [
-                                          TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Text("Ok"))
-                                        ],
-                                      );
-                                    });
-                              });
-                            },
-                          ),
-                          PopupMenuItem(
-                            child: const Text("QR code"),
-                            onTap: () {
-                              Future.delayed(Duration(milliseconds: 10))
-                                  .then((value) {
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        QRcodeAlert(
-                                          id: _character.id,
-                                        ));
-                              });
-                            },
-                          )
-                        ];
-                      },
-                    )
-                  ],
+                                        );
+                                      });
+                                });
+                              },
+                            ),
+                            PopupMenuItem(
+                              child: const Text("QR code"),
+                              onTap: () {
+                                Future.delayed(Duration(milliseconds: 10))
+                                    .then((value) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          QRcodeAlert(
+                                            id: _character.id,
+                                          ));
+                                });
+                              },
+                            )
+                          ];
+                        },
+                      )
+                    ],
+                  ),
+                  bottom: data["spellcasting modifier"] != null
+                      ? const TabBar(tabs: [
+                          Tab(icon: Icon(Icons.casino)),
+                          Tab(icon: Icon(RpgAwesome.scroll_unfurled)),
+                          Tab(icon: Icon(RpgAwesome.broadsword)),
+                          Tab(icon: Icon(Icons.local_mall)),
+                          Tab(icon: Icon(Icons.auto_fix_high)),
+                          Tab(icon: Icon(Icons.description))
+                        ])
+                      : const TabBar(tabs: [
+                          Tab(icon: Icon(Icons.casino)),
+                          Tab(icon: Icon(RpgAwesome.scroll_unfurled)),
+                          Tab(icon: Icon(RpgAwesome.broadsword)),
+                          Tab(icon: Icon(Icons.local_mall)),
+                          Tab(icon: Icon(Icons.description))
+                        ]),
                 ),
-                bottom: data["spellcasting modifier"] != null
-                    ? const TabBar(tabs: [
-                        Tab(icon: Icon(Icons.casino)),
-                        Tab(icon: Icon(Icons.menu_book)),
-                        Tab(icon: Icon(Icons.hardware)),
-                        Tab(icon: Icon(Icons.local_mall)),
-                        Tab(icon: Icon(Icons.auto_fix_high)),
-                        Tab(icon: Icon(Icons.description))
-                      ])
-                    : const TabBar(tabs: [
-                        Tab(icon: Icon(Icons.casino)),
-                        Tab(icon: Icon(Icons.menu_book)),
-                        Tab(icon: Icon(Icons.hardware)),
-                        Tab(icon: Icon(Icons.local_mall)),
-                        Tab(icon: Icon(Icons.description))
-                      ]),
               ),
               body: data["spellcasting modifier"] != null
                   ? TabBarView(

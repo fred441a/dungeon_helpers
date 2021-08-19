@@ -1,7 +1,9 @@
+import 'package:dungeonhelper/general_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'players_page.dart';
 import 'monster_page.dart';
+import 'package:fluttericon/rpg_awesome_icons.dart';
 
 class Groupsheet extends StatelessWidget {
   Groupsheet({Key? key, required this.groupId}) : super(key: key);
@@ -33,26 +35,29 @@ class Groupsheet extends StatelessWidget {
             length: 6,
             child: Scaffold(
               resizeToAvoidBottomInset: false,
-              appBar: AppBar(
-                title: Text(data["name"]),
-                bottom: const TabBar(tabs: [
-                  Tab(
-                    icon: Icon(Icons.person),
-                  ),
-                  Tab(
-                    icon: Icon(Icons.pets),
-                  ),
-                  Tab(icon: Icon(Icons.person_pin)),
-                  Tab(
-                    icon: Icon(Icons.menu),
-                  ),
-                  Tab(
-                    icon: Icon(Icons.comment),
-                  ),
-                  Tab(
-                    icon: Icon(Icons.description),
-                  )
-                ]),
+              appBar: AppBarDecor(
+                height: 125,
+                appbar: AppBar(
+                  title: Text(data["name"]),
+                  bottom: const TabBar(tabs: [
+                    Tab(
+                      icon: Icon(Icons.person),
+                    ),
+                    Tab(
+                      icon: Icon(RpgAwesome.two_dragons),
+                    ),
+                    Tab(icon: Icon(Icons.person_pin)),
+                    Tab(
+                      icon: Icon(Icons.menu),
+                    ),
+                    Tab(
+                      icon: Icon(Icons.comment),
+                    ),
+                    Tab(
+                      icon: Icon(Icons.description),
+                    )
+                  ]),
+                ),
               ),
               body: TabBarView(
                 children: [

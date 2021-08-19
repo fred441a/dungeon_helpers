@@ -720,3 +720,35 @@ Future<String> DiceSelector(BuildContext context, String value, String label) {
 
   return completer.future;
 }
+
+PreferredSize AppBarDecor({required Widget appbar, double height = 100}) {
+  return PreferredSize(
+      child: Column(
+        children: [
+          Expanded(child: appbar),
+          Image(image: AssetImage("assets/app_bar.png")),
+        ],
+      ),
+      preferredSize: Size.fromHeight(height));
+}
+
+/*
+class AppBarDecor extends StatelessWidget {
+  AppBarDecor({Key? key, this.height = 100, required this.appbar})
+      : super(key: key);
+  double height;
+  Widget appbar;
+
+  @override
+  Widget build(BuildContext context) {
+    return PreferredSize(
+        child: Column(
+          children: [
+            Expanded(child: appbar),
+            Image(image: AssetImage("assets/app_bar.png")),
+          ],
+        ),
+        preferredSize: Size.fromHeight(height));
+  }
+}
+*/

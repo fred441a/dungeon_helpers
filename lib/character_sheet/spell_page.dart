@@ -78,7 +78,7 @@ class SpellPage extends StatelessWidget {
             },
             child: Text("Add Spell +")),
         Container(
-          height: percentHeight(.60, context),
+          height: percentHeight(.57, context),
           child: ListView(
             children: [
               const Text(

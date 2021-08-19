@@ -52,7 +52,7 @@ class NotesPage extends StatelessWidget {
             focusNode: textUpdator(_notes, "notes", character),
             maxLines: null,
             //keyboardType: TextInputType.multiline,
-            minLines: 25,
+            minLines: 24,
             decoration: const InputDecoration(
                 focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.grey)),

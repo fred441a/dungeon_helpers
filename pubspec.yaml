@@ -44,6 +44,7 @@ dependencies:
   nfc_manager: ^3.1.0
   qr_code_scanner: ^0.5.2
   qr_flutter: ^4.0.0
+  fluttericon: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +68,7 @@ flutter:
   assets:
     - assets/ability_modifier.png
     - assets/dinglebob.png
+    - assets/app_bar.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
@@ -104,7 +106,3 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
 
-fonts:
-  - family: RPGIcons
-    fonts:
-      - asset: assets/RPGIcons.tff

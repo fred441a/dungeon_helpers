@@ -9,6 +9,7 @@ import 'character_sheet/create_character_page.dart';
 import 'dart:io' show Platform;
 import 'package:nfc_manager/nfc_manager.dart';
 import 'group_sheet/create_group_page.dart';
+import 'general_functions.dart';
 
 class PostLoginPage extends StatefulWidget {
   PostLoginPage({Key? key}) : super(key: key);
@@ -93,15 +94,18 @@ class _PostLoginPageState extends State<PostLoginPage>
   Widget build(BuildContext context) {
     startNfc();
     return Scaffold(
-      appBar: AppBar(
-        title: TabBar(
-          controller: _tabController,
-          tabs: [
-            const Tab(child: Icon(Icons.person)),
-            const Tab(
-              child: Icon(Icons.people),
-            ),
-          ],
+      appBar: AppBarDecor(
+        height: 77,
+        appbar: AppBar(
+          title: TabBar(
+            controller: _tabController,
+            tabs: [
+              const Tab(child: Icon(Icons.person)),
+              const Tab(
+                child: Icon(Icons.people),
+              ),
+            ],
+          ),
         ),
       ),
       body: TabBarView(
